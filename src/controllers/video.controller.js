@@ -106,6 +106,7 @@ const updateVideo = asyncHandler(async (req, res) => {
             message:"Nothing updated"
          })
      }
+     
 
      const currVideo = await video.findById(videoId)
      if(!currVideo){

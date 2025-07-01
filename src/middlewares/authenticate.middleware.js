@@ -11,7 +11,6 @@ export const isAuthenticated = asyncHandler(async (req, res, next) => {
           // 3)then verify them
 
           //this time we are taking from request cookies
-     
 
           //there are multiple cookies so we only want refresh token
           const cookieToken = req.cookies?.refreshToken;
@@ -23,21 +22,21 @@ export const isAuthenticated = asyncHandler(async (req, res, next) => {
 
           //  !!-- This verification is necesary as it proves that yes this was the user
           //once its verified its decoded, into payload ( so isLegit is storing payload basic)
-          //and our payload has 
+          //and our payload has
           const isLegit = jwt.verify(
                cookieToken,
                process.env.REFRESH_TOKEN_SECRET
-               );
-               if (!isLegit) {
-                    throw new Apierror(401, "Invalid token ❗");
-               }
-               const User = await user
+          );
+          if (!isLegit) {
+               throw new Apierror(401, "Invalid token ❗");
+          }
+          const User = await user
                //is legit has our payload
-                    .findById(isLegit.id)
-                    .select("-password -refreshToken");
-               //it can be that there can be tokens but no User, maybe deleted
-               if (!User) {
-                    throw new Apierror(401, "User not found ❗");
+               .findById(isLegit.id)
+               .select("-password -refreshToken");
+          //it can be that there can be tokens but no User, maybe deleted
+          if (!User) {
+               throw new Apierror(401, "User not found ❗");
           }
 
           //this below line can be used in login logout controller
@@ -49,4 +48,3 @@ export const isAuthenticated = asyncHandler(async (req, res, next) => {
           throw new Apierror(401, error.message || "AUTHENTICATION FAILED ❗");
      }
 });
-

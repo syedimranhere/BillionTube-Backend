@@ -63,7 +63,7 @@ export const generateAccessByRefresh = async (req, res) => {
           .cookie("accesstoken", accessToken, option)
           .cookie("refreshToken", refreshToken, option)
           .json({
-               message:"New Tokens Generated"
+               message: "New Tokens Generated",
           });
      //now we have new tokens and refreshToken is also stored in User.token in DB
 };
@@ -257,7 +257,7 @@ export const updateAvatar = asyncHandler(async (req, res) => {
 });
 export const updateCover = asyncHandler(async function (req, res) {
      //the same exact procedure
-// only 1 file so thats why not req.files
+     // only 1 file so thats why not req.files
      const coverPath = req.file?.path;
      if (!coverPath) {
           throw new Apierror(400, "Cover Image is required ❗");
@@ -328,29 +328,7 @@ export const getUserchannel = asyncHandler(async (req, res) => {
                     as: "Subscribers",
                },
           },
-          // {
-          //      $addFields: {
-          //           //note that these fields aint saved in the User model
-          //           SubsCount: {
-          //                //add $ sign before every field
-          //                $size: "$Subscribers",
-          //           },
-          //           SubToCount: {
-          //                $size: "$SubscribedTo", //this is array of object and we are taking out its length
-          //           },
-          //           isSubcsribed: {
-          //                $cond: {
-          //                     if: {
-          //                          //req.user is an id
-          //                          $in: [req.user, "$Subscribers.subscriber"],
-          //                     },
-          //                     then: true,
-          //                     else: false,
-          //                },
-          //           },
-          //      },
-          //      //we will send this true false to frontend engineer
-          // },
+
           {
                $addFields: {
                     firstSub: {
@@ -443,7 +421,7 @@ export const getWatchHistory = asyncHandler(async (req, res) => {
      ]);
      return res.status(200).json({
           success: true,
-          data: User[0].WatchHistory
+          data: User[0].WatchHistory,
           // below one will return first video
           // data: User.WatchHistory[0],
      });

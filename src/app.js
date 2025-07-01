@@ -12,9 +12,11 @@ app.use(
      })
 );
 
-app.use(express.json({
-     limit:"5000kb"
-}));
+app.use(
+     express.json({
+          limit: "5000kb",
+     })
+);
 app.use(
      express.urlencoded({
           //processes data in pro style
@@ -54,13 +56,18 @@ import commentsRoute from "./routes/comment.route.js";
 
 app.use("/api/v1/comments", commentsRoute);
 
-import {likeRoute} from "./routes/likes.route.js";
+import { likeRoute } from "./routes/likes.route.js";
 app.use("/api/v1/likes", likeRoute);
 
-import {tweetRoute} from "./routes/tweet.route.js";
+import { tweetRoute } from "./routes/tweet.route.js";
 app.use("/api/v1/tweets", tweetRoute);
 
+import { videoRoute } from "./routes/video.route.js";
+app.use("/api/v1/videos", videoRoute);
+import { playlistRoute } from "./routes/playlist.route.js";
+app.use("/api/v1/playlists", playlistRoute);
 
-import{videoRoute} from "./routes/video.route.js";
-app.use("/api/v1/videos", videoRoute); 
+import { subscriptionRouter } from "./routes/subscription.route.js";
+app.use("/api/v1/subscriptions", subscriptionRouter);
+
 export { app };

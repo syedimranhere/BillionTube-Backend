@@ -13,7 +13,7 @@ const getVideoComments = asyncHandler(async function (req, res) {
      const videoID = req.params.videoId;
      const thisVideosComments = await comment
           .find(
-               //  show only content, bu thide _id and other things
+               //  show only content, but hide _id and other things
                { video: videoID }
           )
           .select("content -_id");

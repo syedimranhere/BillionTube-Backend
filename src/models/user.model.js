@@ -64,17 +64,7 @@ const userschema = new mongoose.Schema(
           timestamps: true, // Adds createdAt and updatedAt automatically
      }
 );
-//as soon as save is hit this encryption will take place
-// userSchema.pre("save", async function () {
-//      //modified wont get triggered on accessing with password
-//      if (!this.isModified("password")) {
-//           return;
-//      }
-//      this.password = await bcrypt.hash(this.password, 10);
-// });
 
-//before ssving do this
-//this will be done by mongoose itself
 
 userschema.pre("save", async function (name) {
      //encrypt pass
