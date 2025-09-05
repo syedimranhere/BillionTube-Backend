@@ -1,27 +1,30 @@
 import mongoose, { Schema } from "mongoose";
 
 const comment_schema = new Schema(
-     {
-          content: {
-               // what is the comment
-               type: String,
-               required: true,
-          },
-          video: {
-               //which video this comment belongs to
-               //this is not entire object,but object id _id
-               type: Schema.Types.ObjectId,
-               ref: "video",
-          },
-          owner: {
-               //who wrote this comment
-               type: Schema.Types.ObjectId,
-               ref: "user",
-          },
-     },
-     {
-          timestamps: true,
-     }
+  {
+    content: {
+      // what is the comment
+      type: String,
+      required: true,
+    },
+    video: {
+      //which video is this comment for
+      type: Schema.Types.ObjectId,
+      ref: "video",
+    },
+    owner: {
+      //who wrote this comment
+      type: Schema.Types.ObjectId,
+      ref: "user",
+    },
+    edited: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  {
+    timestamps: true,
+  }
 );
 
 //named export

@@ -27,17 +27,18 @@ app.get("/", (req, res) => {
 import userRoute from "./routes/user.route.js";
 import commentsRoute from "./routes/comment.route.js";
 import { likeRoute } from "./routes/likes.route.js";
-import { tweetRoute } from "./routes/tweet.route.js";
 import { videoRoute } from "./routes/video.route.js";
 import { playlistRoute } from "./routes/playlist.route.js";
 import { subscriptionRouter } from "./routes/subscription.route.js";
-
-app.use("/api/v1/user", userRoute);
-app.use("/api/v1/comments", commentsRoute);
-app.use("/api/v1/likes", likeRoute);
-app.use("/api/v1/tweets", tweetRoute);
-app.use("/api/v1/videos", videoRoute);
-app.use("/api/v1/playlists", playlistRoute);
-app.use("/api/v1/subscriptions", subscriptionRouter);
+import { watchlaterRoute } from "./routes/watchlater.route.js";
+import { watchHistoryRouter } from "./routes/watchhistory.route.js";
+app.use("/api/user", userRoute);
+app.use("/api/comments", commentsRoute);
+app.use("/api/likes", likeRoute);
+app.use("/api/videos", videoRoute);
+app.use("/api/playlists", playlistRoute);
+app.use("/api/subscriptions", subscriptionRouter);
+app.use("/api/watchlater", watchlaterRoute);
+app.use("/api/watchhistory", watchHistoryRouter);
 
 export { app };

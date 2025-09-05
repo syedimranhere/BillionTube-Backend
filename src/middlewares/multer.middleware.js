@@ -1,5 +1,5 @@
 import multer from "multer";
-
+//isko ham fileuploads ke lie use krenga
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "./public/temp");

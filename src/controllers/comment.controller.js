@@ -4,9 +4,9 @@ import { comment } from "../models/comment.model.js";
 
 const getVideoComments = asyncHandler(async function (req, res) {
   const videoID = req.params.videoId;
-  const thisVideosComments = await comment
-    .find({ video: videoID })
-    .select("content -_id");
+  //send everything inside
+  const thisVideosComments = await comment.find({ video: videoID });
+
   return res.status(200).json({
     success: true,
     comments: thisVideosComments,
@@ -27,10 +27,9 @@ const addComment = asyncHandler(async (req, res) => {
     video: videoId,
     owner: Owner,
   });
-
   return res.status(200).json({
     message: "Comment Generated",
-    commentObj: Comment,
+    comment: Comment,
   });
 });
 
@@ -42,12 +41,14 @@ const updateComment = asyncHandler(async function (req, res) {
     throw new Apierror(404, "Comment not found");
   }
 
-  const { newContent } = req.body;
-  if (!newContent) {
+  Comment.edited = true;
+
+  const { content } = req.body;
+  if (!content) {
     throw new Apierror(400, "Content is required");
   }
 
-  Comment.content = newContent;
+  Comment.content = content;
   await Comment.save();
 
   return res.status(200).json({

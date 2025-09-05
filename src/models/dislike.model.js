@@ -1,16 +1,14 @@
 import mongoose, { Schema } from "mongoose";
-const likeSchema = new Schema(
+
+const dislikeSchema = new Schema(
   {
     video: {
       type: Schema.Types.ObjectId,
       ref: "video",
     },
 
-    likedBy: {
-      type: Schema.Types.ObjectId,
-      ref: "user",
-    },
-    likedTo: {
+    //ofcourse current user will like
+    dislikedBy: {
       type: Schema.Types.ObjectId,
       ref: "user",
     },
@@ -18,4 +16,4 @@ const likeSchema = new Schema(
   { timestamps: true }
 );
 
-export const like = mongoose.model("like", likeSchema);
+export const dislike = mongoose.model("dislike", dislikeSchema);

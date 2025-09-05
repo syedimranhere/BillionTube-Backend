@@ -1,17 +1,20 @@
 import { Router } from "express";
 import {
-     likeVideo,
-     likeComment,
-     likeTweet,
-     getLikedVideos,
+  togglelikeVideo,
+  getLikedVideos,
+  getLikedStatus,
+  deleteforAll,
+  toggledislikeVideo,
 } from "../controllers/like.controller.js";
 import { isAuthenticated } from "../middlewares/authenticate.middleware.js";
 const likeRoute = Router();
+
 likeRoute.use(isAuthenticated); //all routes are protected
+likeRoute.route("/delete-for-all/:videoId").delete(deleteforAll);
+likeRoute.route("/v/l/:videoId").post(togglelikeVideo);
+likeRoute.route("/v/d/:videoId").post(toggledislikeVideo);
 
-likeRoute.route("/toggle/v/:videoId").post(likeVideo);
-likeRoute.route("/toggle/c/:commentId").post(likeComment);
-likeRoute.route("/toggle/t/:tweetId").post(likeTweet);
 likeRoute.route("/videos").get(getLikedVideos);
+likeRoute.route("/status/:videoId").get(getLikedStatus);
 
-export {likeRoute}
+export { likeRoute };
