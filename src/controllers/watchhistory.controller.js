@@ -2,7 +2,6 @@ import { watchhistory } from "../models/watchhistory.model.js";
 import { asyncHandler } from "../utils/asynchandler.js";
 
 export const addToWatchHistory = asyncHandler(async (req, res) => {
-  console.log("added called history");
   const userId = req.user;
   const videoId = req.params.videoId;
   await watchhistory.findOneAndUpdate(

@@ -5,7 +5,7 @@ import { user } from "../models/user.model.js";
 
 export const isAuthenticated = asyncHandler(async (req, res, next) => {
   const accessToken = req.cookies?.accessToken;
-  console.log("o        accccess ken", accessToken);
+
   if (!accessToken) {
     throw new Apierror(401, "Authentication required ❗");
   }

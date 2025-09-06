@@ -146,6 +146,7 @@ const getVideoById = asyncHandler(async (req, res) => {
       message: "Video not found",
     });
   }
+
   const x = await user.findById(file.owner);
   x.totalViews = x.totalViews + 1;
   await x.save();

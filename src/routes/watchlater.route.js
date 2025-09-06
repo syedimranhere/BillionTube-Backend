@@ -7,7 +7,6 @@ import {
 } from "../controllers/watchlater.controller.js";
 
 const watchlaterRoute = Router();
-
 watchlaterRoute.use(isAuthenticated);
 watchlaterRoute.route("/a/:videoId").post(addVideoinWatchLater);
 watchlaterRoute.route("/r/:videoId").post(removeVideoinWatchLater);

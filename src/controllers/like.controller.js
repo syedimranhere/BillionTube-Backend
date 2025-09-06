@@ -98,7 +98,6 @@ const getLikedVideos = asyncHandler(async (req, res) => {
       },
     });
 
-  console.log(getLikedVideos);
   return res.status(200).json({
     success: true,
     data: getLikedVideos,
@@ -107,7 +106,7 @@ const getLikedVideos = asyncHandler(async (req, res) => {
 const getLikedStatus = asyncHandler(async (req, res) => {
   //we will fetch this on reload takay my default user ko pata rhey usne kia like kara tha ya dislike
   const { videoId } = req.params;
-  console.log(videoId, req.user);
+
   const likedStatus = await like.findOne({
     video: videoId,
     likedBy: req.user,
@@ -116,25 +115,20 @@ const getLikedStatus = asyncHandler(async (req, res) => {
     video: videoId,
     dislikedBy: req.user,
   });
-  console.log(likedStatus);
-  if (likedStatus) {
-    console.log("like exists");
 
+  if (likedStatus) {
     return res.status(200).json({
       success: true,
       status: "liked",
     });
   }
   if (dislikelikedStatus) {
-    console.log("Dislike exists");
-
     return res.status(200).json({
       success: true,
       status: "disliked",
     });
   }
   //it means the video was liked
-  console.log("Nothing exists");
 
   return res.status(200).json({ success: true, status: "NONE" });
 });

@@ -17,7 +17,7 @@ const getWatchLatervideos = asyncHandler(async (req, res) => {
     })
 
     .select("-_id videos");
-  console.log(userwatchlater);
+
   return res.status(200).json({
     success: true,
     data: userwatchlater,
@@ -48,7 +48,6 @@ const addVideoinWatchLater = asyncHandler(async (req, res) => {
     }
   }
 
-  console.log(watchLaterDoc);
   return res.status(200).json({
     success: true,
     message: "Video added to watch later",

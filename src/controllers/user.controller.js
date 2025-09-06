@@ -103,14 +103,14 @@ export const loginController = asyncHandler(async (req, res) => {
       $or: [{ email: username_or_email }, { username: username_or_email }],
     })
     .select("+password");
-  console.log(userDoc);
+
   if (!userDoc) {
     return res.status(404).json({
       type: "error",
       message: "No user found with this email or username",
     });
   }
-  console.log(typedpassword);
+
   const isPass = await userDoc.isPasswordCorrect(typedpassword);
   if (!isPass) {
     return res.status(400).json({

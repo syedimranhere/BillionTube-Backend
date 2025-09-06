@@ -86,12 +86,10 @@ const subscriptionStatus = asyncHandler(async (req, res) => {
     channel: req.params.channelId,
   });
   if (exists) {
-    console.log("yes");
     return res.status(200).json({
       success: true,
     });
   }
-  console.log("no");
 
   return res.status(200).json({
     success: false,
@@ -99,7 +97,6 @@ const subscriptionStatus = asyncHandler(async (req, res) => {
 });
 
 const deleteSubscription = asyncHandler(async (req, res) => {
-  console.log("HERE");
   const userId = req.user;
   const chanelId = req.params.channelId;
   await subscription.findOneAndDelete({
