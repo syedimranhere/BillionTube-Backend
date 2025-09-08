@@ -3,6 +3,7 @@ import { asyncHandler } from "../utils/asynchandler.js";
 import { video } from "../models/video.model.js";
 import { uploadimages, uploadvideo } from "../utils/cloudinary.js";
 import { user } from "../models/user.model.js";
+
 const getAllVideos = asyncHandler(async (req, res) => {
   const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query;
 
@@ -102,12 +103,16 @@ const publishAVideo = asyncHandler(async (req, res) => {
     throw new Apierror(400, "Error while uploading files to cloud");
   }
   const Fortmattedduration = formatDuration(uploadedVideo.duration);
+  const USER = await user.findById(req.user);
 
+  //the uploader
   const createdVideo = await video.create({
     videofile: uploadedVideo.url,
     thumbnail: uploadedThumbnail.url,
     title,
     description,
+    channelNAME: USER.fullname,
+    channelUSERNAME: USER.username,
     duration: Fortmattedduration,
     views: 0,
     isPublished: true,
@@ -158,6 +163,49 @@ const getVideoById = asyncHandler(async (req, res) => {
   return res.status(200).json({
     success: true,
     video: file,
+  });
+});
+const getSearchedVideos = asyncHandler(async (req, res) => {
+  const { q } = req.query;
+
+  if (!q) {
+    return res.status(200).json({
+      results: [],
+    });
+  }
+  const vids = await video.aggregate([
+    {
+      $search: {
+        index: "default",
+        text: {
+          query: q,
+          path: [
+            "title",
+            "description",
+            "category",
+            "channelNAME",
+            "channelUSERNAME",
+          ],
+          fuzzy: { maxEdits: 1 },
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "owner",
+        foreignField: "_id",
+        as: "owner",
+      },
+    },
+
+    {
+      $unwind: "$owner",
+    },
+  ]);
+
+  return res.status(200).json({
+    results: vids,
   });
 });
 const updateVideo = asyncHandler(async (req, res) => {
@@ -328,4 +376,5 @@ export {
   togglePublishStatus,
   getTrendingVideos,
   getVideosByCategory,
+  getSearchedVideos,
 };

@@ -4,6 +4,7 @@ import { asyncHandler } from "../utils/asynchandler.js";
 // import { user } from "../models/user.model";
 const getWatchLatervideos = asyncHandler(async (req, res) => {
   const userId = req.user;
+
   const userwatchlater = await watchlater
     .findOne({
       user: userId,
@@ -15,7 +16,6 @@ const getWatchLatervideos = asyncHandler(async (req, res) => {
         select: "fullname avatar _id",
       },
     })
-
     .select("-_id videos");
 
   return res.status(200).json({

@@ -279,13 +279,7 @@ export const updateAvatar = asyncHandler(async (req, res) => {
   const User = await user.findById(req.user).select("-password");
 
   User.avatar = upload.url;
-
   await User.save();
-
-  if (OldId) {
-    await cloudinary.uploader.destroy(OldId);
-  }
-
   return res.status(200).json({
     success: true,
     message: "Avatar Changed",

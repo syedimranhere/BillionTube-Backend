@@ -10,16 +10,13 @@ import {
   getVideosForPage,
   getAUsersvideo,
   getTrendingVideos,
+  getSearchedVideos,
 } from "../controllers/video.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { getUserId } from "../middlewares/getuserid.js";
 
 const videoRoute = Router();
-videoRoute.get("/search", (req, res) => {
-  return res.status(200).json({
-    message: "helo",
-  });
-});
+videoRoute.get("/search", getSearchedVideos);
 videoRoute.get("/trending", getTrendingVideos);
 videoRoute.get("/uservideo/:userId", getAUsersvideo);
 videoRoute.get("/getVideos", getVideosForPage);

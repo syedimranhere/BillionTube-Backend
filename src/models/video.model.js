@@ -17,6 +17,14 @@ const videoschema = new Schema(
     description: {
       type: String,
     },
+    //channel name and username are for better results of atlas
+    channelNAME: {
+      type: String,
+    },
+    channelUSERNAME: {
+      type: String,
+    },
+
     duration: {
       type: Number, //cloudinary URL
       required: true,

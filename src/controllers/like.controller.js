@@ -73,9 +73,25 @@ const toggledislikeVideo = asyncHandler(async (req, res) => {
       disliked: false,
     });
   }
-  await video.findByIdAndUpdate(videoID, {
-    $inc: { likes: -1 },
-  });
+  //the likes are getting in minus toh ham ye use kreng
+  await video.findByIdAndUpdate(
+    videoID,
+    [
+      {
+        $set: {
+          likes: {
+            $cond: [
+              { $gt: ["$likes", 0] }, // if likes > 0
+              { $subtract: ["$likes", 1] }, // then decrement
+              0, // else keep at 0
+            ],
+          },
+        },
+      },
+    ],
+    { new: true }
+  );
+
   await like.findOneAndDelete({ video: videoID, likedBy: req.user });
   await dislike.create({ video: videoID, dislikedBy: req.user });
 
