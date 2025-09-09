@@ -14,17 +14,14 @@ import {
 } from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { isAuthenticated } from "../middlewares/authenticate.middleware.js";
-
 const userRoute = Router();
-
 userRoute.post("/login", loginController);
-
 userRoute.post("/update-username", isAuthenticated, updateUsername);
 userRoute.post("/update-fullname", isAuthenticated, updateFullname);
 userRoute.get("/videos", isAuthenticated, getUsersvideo);
 userRoute.get("/stats", isAuthenticated, getStats);
 userRoute.get("/verifyAccess", verifyAccess);
-userRoute.get("/:userId", getUserInfo);
+userRoute.get("/id/:userId", getUserInfo);
 
 userRoute.post(
   "/register",

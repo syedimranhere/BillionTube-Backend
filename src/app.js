@@ -10,10 +10,10 @@ app.use(
     credentials: true,
   })
 );
+app.use(cookieParser());
 
 app.use(express.json({ limit: "5000kb" }));
 app.use(express.urlencoded({ extended: true, limit: "20kb" }));
-app.use(cookieParser());
 app.use(express.static("public"));
 
 app.get("/", (req, res) => {

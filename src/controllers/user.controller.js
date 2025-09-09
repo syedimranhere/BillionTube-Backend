@@ -94,10 +94,9 @@ export const generateAccessAndRefreshTokens = async function (userId) {
 //       message: "New Tokens Generated",
 //     });
 // };
-
 export const loginController = asyncHandler(async (req, res) => {
   const { username_or_email, typedpassword } = req.body;
-
+  console.log("we got here");
   const userDoc = await user
     .findOne({
       $or: [{ email: username_or_email }, { username: username_or_email }],
@@ -125,8 +124,10 @@ export const loginController = asyncHandler(async (req, res) => {
 
   const option = {
     httpOnly: true,
-    secure: true,
+    secure: process.env.NODE_ENV === "production", // must be true on Railway
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   };
+
   return res
     .status(200)
     .cookie("refreshToken", refreshToken, option)
@@ -254,7 +255,7 @@ export const updateFullname = asyncHandler(async function (req, res) {
     })
     .select("-password");
   if (Exist) {
-    throw new Apierror(400, "Username already taken❗❗❗");
+    throw new Apierror(400, "Username already taken❗");
   }
   User.fullname = fullname;
 
@@ -282,6 +283,7 @@ export const updateAvatar = asyncHandler(async (req, res) => {
   await User.save();
   return res.status(200).json({
     success: true,
+    avatar: User.avatar,
     message: "Avatar Changed",
   });
 });
