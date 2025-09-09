@@ -13,6 +13,12 @@ import { video } from "../models/video.model.js";
 import { like } from "../models/like.model.js";
 import { subscription } from "../models/subscription.model.js";
 
+const option = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production", // must be true on hosting
+  //if its deployed so it cant be same site and hence frontend cant send cookies
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+};
 export const getUsersvideo = async (req, res) => {
   const userId = req.user;
 
@@ -96,7 +102,7 @@ export const generateAccessAndRefreshTokens = async function (userId) {
 // };
 export const loginController = asyncHandler(async (req, res) => {
   const { username_or_email, typedpassword } = req.body;
-  console.log("we got here");
+
   const userDoc = await user
     .findOne({
       $or: [{ email: username_or_email }, { username: username_or_email }],
@@ -122,12 +128,6 @@ export const loginController = asyncHandler(async (req, res) => {
     userDoc._id
   );
 
-  const option = {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production", // must be true on Railway
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-  };
-
   return res
     .status(200)
     .cookie("refreshToken", refreshToken, option)
@@ -139,15 +139,9 @@ export const loginController = asyncHandler(async (req, res) => {
 });
 
 export const logoutController = asyncHandler(async (req, res) => {
-  res.clearCookie("refreshToken", {
-    httpOnly: true,
-    secure: true,
-  });
+  res.clearCookie("refreshToken", option);
 
-  res.clearCookie("accessToken", {
-    httpOnly: true,
-    secure: true,
-  });
+  res.clearCookie("accessToken", option);
 
   const id = req.user;
   const USER = await user.findById(id).select("-password ");
