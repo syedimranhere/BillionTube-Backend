@@ -48,7 +48,7 @@ export const getVideosForPage = asyncHandler(async (req, res) => {
         $project: {
           // exclude sensitive fields
           "owner.password": 0,
-          "owner.refreshtoken": 0,
+
           "owner.totalViews": 0,
           "owner.isVerified": 0,
           "owner.category": 0,
@@ -132,10 +132,7 @@ const getVideoById = asyncHandler(async (req, res) => {
   const vidId = req.params.videoId;
   const file = await video
     .findById(vidId)
-    .populate(
-      "owner",
-      "-password -refreshtoken -totalViews -isVerified -category"
-    );
+    .populate("owner", "-password  -totalViews -isVerified -category");
 
   if (req?.user != file.owner._id) {
     if (file.visibility === "private") {

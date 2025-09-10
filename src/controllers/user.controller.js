@@ -1,6 +1,6 @@
 import { Apierror } from "../utils/api.error.js";
 import { user } from "../models/user.model.js";
-import { v2 as cloudinary } from "cloudinary";
+
 import { asyncHandler } from "../utils/asynchandler.js";
 import jwt from "jsonwebtoken";
 import {
@@ -15,8 +15,7 @@ import { subscription } from "../models/subscription.model.js";
 
 const option = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === "production", // must be true on hosting
-  //if its deployed so it cant be same site and hence frontend cant send cookies
+  secure: process.env.NODE_ENV === "production",
   sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
 };
 export const getUsersvideo = async (req, res) => {
@@ -52,54 +51,6 @@ export const getUserInfo = async (req, res) => {
   });
 };
 
-export const generateAccessAndRefreshTokens = async function (userId) {
-  try {
-    const userDoc = await user.findById(userId).select("-password");
-    if (!userDoc) {
-      throw new Apierror(404, "User not found ");
-    }
-    const accessToken = userDoc.generateaccesstoken();
-    const refreshToken = userDoc.generaterefreshtoken();
-    userDoc.refreshToken = refreshToken;
-    await userDoc.save();
-
-    return { accessToken, refreshToken };
-  } catch (error) {
-    console.error("Token generation error:", error);
-    throw new Apierror(500, error.message || "Token generation failed");
-  }
-};
-
-// export const generateAccessByRefresh = async (req, res) => {
-//   const cookieToken = req.cookies?.refreshToken;
-//   if (!cookieToken) {
-//     throw new Apierror(401, "Unauthorized Access ");
-//   }
-//   const isLegit = jwt.verify(cookieToken, process.env.REFRESH_TOKEN_SECRET);
-//   if (!isLegit) {
-//     throw new Apierror(401, "Invalid Token❗");
-//   }
-//   const User = await user.findbyId(isLegit.id);
-//   if (User.refreshToken !== cookieToken) {
-//     throw new Apierror(401, "Invalid Token❗");
-//   }
-
-//   const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
-//     isLegit.id
-//   );
-
-//   const option = {
-//     httpOnly: true,
-//     secure: true,
-//   };
-//   return res
-//     .status(200)
-//     .cookie("accesstoken", accessToken, option)
-//     .cookie("refreshToken", refreshToken, option)
-//     .json({
-//       message: "New Tokens Generated",
-//     });
-// };
 export const loginController = asyncHandler(async (req, res) => {
   const { username_or_email, typedpassword } = req.body;
 
@@ -124,24 +75,24 @@ export const loginController = asyncHandler(async (req, res) => {
     });
   }
 
-  const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
-    userDoc._id
+  const token = jwt.sign(
+    {
+      id: userDoc._id,
+    },
+    process.env.TOKEN_SECRET,
+    {
+      expiresIn: process.env.TOKEN_EXPIRY,
+    }
   );
 
-  return res
-    .status(200)
-    .cookie("refreshToken", refreshToken, option)
-    .cookie("accessToken", accessToken, option)
-    .json({
-      success: true,
-      user: userDoc,
-    });
+  return res.status(200).cookie("token", token, option).json({
+    success: true,
+    user: userDoc,
+  });
 });
 
 export const logoutController = asyncHandler(async (req, res) => {
-  res.clearCookie("refreshToken", option);
-
-  res.clearCookie("accessToken", option);
+  res.clearCookie("token", option);
 
   const id = req.user;
   const USER = await user.findById(id).select("-password ");
@@ -152,9 +103,6 @@ export const logoutController = asyncHandler(async (req, res) => {
       message: "User already logged out or not found 🕵️‍♂️",
     });
   }
-
-  USER.refreshToken = null;
-  await USER.save();
 
   return res.status(200).json({
     type: "success",
@@ -282,19 +230,19 @@ export const updateAvatar = asyncHandler(async (req, res) => {
   });
 });
 export const verifyAccess = async (req, res) => {
-  const { accessToken } = req.cookies;
+  const { token } = req.cookies;
 
-  if (!accessToken) return res.status(406).json({ message: "No access token" });
+  if (!token) return res.status(406).json({ message: "No  token" });
 
   try {
-    const decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+    const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
     if (!decoded || !decoded.id) {
-      return res.status(406).json({ message: "Invalid access token" });
+      return res.status(406).json({ message: "Invalid  token" });
     }
 
     const User = await user.findById(decoded.id);
     if (!User) {
-      return res.status(406).json({ message: "Invalid access token" });
+      return res.status(406).json({ message: "Invalid  token" });
     }
 
     res.status(200).json({
@@ -302,7 +250,7 @@ export const verifyAccess = async (req, res) => {
       user: User,
     });
   } catch (err) {
-    res.status(401).json({ message: "Invalid access token" });
+    res.status(401).json({ message: "Invalid  token" });
   }
 };
 

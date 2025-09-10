@@ -70,32 +70,32 @@ userschema.pre("save", async function () {
   this.password = await bcrypt.hash(this.password, 12);
 });
 
-userschema.methods.generateaccesstoken = function () {
-  return jwt.sign(
-    {
-      id: this._id,
-      username: this.username,
-      fullName: this.fullName,
-      email: this.email,
-    },
-    process.env.ACCESS_TOKEN_SECRET,
-    {
-      expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
-    }
-  );
-};
+// userschema.methods.generateaccesstoken = function () {
+//   return jwt.sign(
+//     {
+//       id: this._id,
+//       username: this.username,
+//       fullName: this.fullName,
+//       email: this.email,
+//     },
+//     process.env.ACCESS_TOKEN_SECRET,
+//     {
+//       expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
+//     }
+//   );
+// };
 
-userschema.methods.generaterefreshtoken = function () {
-  return jwt.sign(
-    {
-      id: this._id,
-    },
-    process.env.REFRESH_TOKEN_SECRET,
-    {
-      expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
-    }
-  );
-};
+// userschema.methods.generaterefreshtoken = function () {
+//   return jwt.sign(
+//     {
+//       id: this._id,
+//     },
+//     process.env.REFRESH_TOKEN_SECRET,
+//     {
+//       expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
+//     }
+//   );
+// };
 
 userschema.methods.isPasswordCorrect = async function (pass) {
   return await bcrypt.compare(pass, this.password);
