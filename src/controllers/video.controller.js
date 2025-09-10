@@ -199,6 +199,11 @@ const getSearchedVideos = asyncHandler(async (req, res) => {
     {
       $unwind: "$owner",
     },
+    {
+      $match: {
+        visibility: "public",
+      },
+    },
   ]);
 
   return res.status(200).json({
