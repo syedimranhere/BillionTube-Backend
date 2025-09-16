@@ -328,7 +328,8 @@ export const registerUser = asyncHandler(async (req, res) => {
 
   const ourUser = await user.create({
     email,
-    avatar: avatar ? avatar.url : "",
+    //if no pfp so mongo has our default avatar
+    ...(avatar && { avatar: avatar.url }),
     fullname,
     username,
     password,
