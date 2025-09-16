@@ -1,25 +1,35 @@
-﻿# BillionTube Backend 
+﻿BillionTube Backend 🚀
 
-This is the backend system powering the core functionality of **BillionTube** — a minimal, developer-built video platform.
+This is the backend powering BillionTube — a minimal, developer-built video platform.
+Everything is written from scratch, no templates, no copy-paste junk—just clean, scalable backend logic.
 
-Everything’s written from scratch:  
- Auth system  
- Video CRUD logic  
- Basic feed endpoints  
- MongoDB integration  
- RESTful routes
+Features
 
-> No templates. No copied junk. Just clean backend logic.
+✅ User authentication & JWT-based session management
 
----
+✅ Video CRUD (Create, Read, Update, Delete)
 
-##  Stack
+✅ Basic feed endpoints for fetching videos
 
-- **Node.js** + **Express.js**
-- **MongoDB** + **Mongoose**
-- **JWT** for user authentication
-- **Dotenv** for environment variables
-- **Multer** (if using for uploads — remove if not)
+✅ MongoDB integration with Mongoose
 
----
+✅ RESTful routes for clean API structure
 
+Built with simplicity and scalability in mind. More features are coming soon!
+
+Tech Stack
+
+Node.js + Express.js – server and routing
+
+MongoDB + Mongoose – database & ORM
+
+JWT – authentication & session security
+
+dotenv – environment variable management
+
+Multer – file uploads (optional; remove if not used
+
+🚀 Quick Start
+git clone https://github.com/imransyedhere/billiontube-backend.git
+cd billiontube-backend
+npm install
