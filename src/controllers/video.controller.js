@@ -122,7 +122,7 @@ const publishAVideo = asyncHandler(async (req, res) => {
     tags,
   });
 
-  return res.status(200).json({
+  return res.status(201).json({
     message: "Video uploaded successfully",
     success: true,
     data: createdVideo,

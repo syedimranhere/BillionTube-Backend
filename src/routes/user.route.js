@@ -10,6 +10,7 @@ import {
   getUserInfo,
   getUsersvideo,
   getStats,
+  DeleteAccount,
   updateFullname,
 } from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
@@ -34,6 +35,7 @@ userRoute.post(
 );
 
 userRoute.post("/logout", isAuthenticated, logoutController);
+userRoute.post("/deleteMe", isAuthenticated, DeleteAccount);
 userRoute.post("/change-password", isAuthenticated, changePassword);
 userRoute.post("/verify", verifyAccess);
 

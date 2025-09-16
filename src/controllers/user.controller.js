@@ -12,6 +12,8 @@ import { uploadimages } from "../utils/cloudinary.js";
 import { video } from "../models/video.model.js";
 import { like } from "../models/like.model.js";
 import { subscription } from "../models/subscription.model.js";
+import { comment } from "../models/comment.model.js";
+import { dislike } from "../models/dislike.model.js";
 
 const option = {
   httpOnly: true,
@@ -56,7 +58,10 @@ export const loginController = asyncHandler(async (req, res) => {
 
   const userDoc = await user
     .findOne({
-      $or: [{ email: username_or_email }, { username: username_or_email }],
+      $or: [
+        { email: username_or_email.trim() },
+        { username: username_or_email.trim() },
+      ],
     })
     .select("+password");
 
@@ -232,17 +237,17 @@ export const updateAvatar = asyncHandler(async (req, res) => {
 export const verifyAccess = async (req, res) => {
   const { token } = req.cookies;
 
-  if (!token) return res.status(406).json({ message: "No  token" });
+  if (!token) return res.status(406).json({ message: "No token" });
 
   try {
     const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
     if (!decoded || !decoded.id) {
-      return res.status(406).json({ message: "Invalid  token" });
+      return res.status(406).json({ message: "Invalid token" });
     }
 
     const User = await user.findById(decoded.id);
     if (!User) {
-      return res.status(406).json({ message: "Invalid  token" });
+      return res.status(406).json({ message: "Invalid token" });
     }
 
     res.status(200).json({
@@ -250,7 +255,7 @@ export const verifyAccess = async (req, res) => {
       user: User,
     });
   } catch (err) {
-    res.status(401).json({ message: "Invalid  token" });
+    res.status(401).json({ message: "Invalid token" });
   }
 };
 
@@ -281,20 +286,25 @@ export const getStats = async (req, res) => {
 export const registerUser = asyncHandler(async (req, res) => {
   const { fullname, email, username, password, gender, country } = req.body;
 
-  if (!email || !password || !fullname || !username || !gender || !country) {
-    throw new Apierror(400, "All fields are required");
-  }
-
   if (!testemailvalid(email)) {
-    throw new Apierror(400, "Invalid email format ");
+    return res.status(404).json({
+      type: "error",
+      message: "Invalid email format",
+    });
   }
 
   if (!usernamevalid(username)) {
-    throw new Apierror(400, "Invalid username ");
+    return res.status(404).json({
+      type: "error",
+      message: "Invalid username",
+    });
   }
 
   if (!isValidFullname(fullname)) {
-    throw new Apierror(400, "Invalid fullname ");
+    return res.status(404).json({
+      type: "error",
+      message: "Invalid Fullname",
+    });
   }
 
   const userExists = await user
@@ -304,7 +314,10 @@ export const registerUser = asyncHandler(async (req, res) => {
     .select("-password");
 
   if (userExists) {
-    throw new Apierror(410, "Username/Email already exists");
+    return res.status(404).json({
+      type: "error",
+      message: "Email/Username already exists",
+    });
   }
 
   const avatarpath = req.files?.avatar?.[0]?.path;
@@ -333,4 +346,33 @@ export const registerUser = asyncHandler(async (req, res) => {
     success: true,
     message: "User created successfully",
   });
+});
+
+export const DeleteAccount = asyncHandler(async (req, res) => {
+  try {
+    // Delete all user-related data
+    await user.findByIdAndDelete(req.user);
+    await video.deleteMany({ owner: req.user });
+    await like.deleteMany({ owner: req.user });
+    await dislike.deleteMany({ dislikedBy: req.user });
+    await comment.deleteMany({ owner: req.user });
+    await subscription.deleteMany({ subscriber: req.user });
+
+    console.log("Account deletion completed");
+
+    // Clear the cookie
+    res.clearCookie("token", option);
+
+    // IMPORTANT: Send a proper JSON response
+    return res.status(200).json({
+      success: true,
+      message: "Account deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error deleting account:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to delete account",
+    });
+  }
 });

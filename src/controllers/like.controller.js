@@ -30,7 +30,7 @@ const togglelikeVideo = asyncHandler(async (req, res) => {
       likedBy: req.user,
     });
 
-    return res.status(200).json({
+    return res.status(201).json({
       success: true,
       liked: false,
     });
@@ -41,7 +41,6 @@ const togglelikeVideo = asyncHandler(async (req, res) => {
     video: videoID,
     dislikedBy: req.user,
   });
-
   // Like the video
   VIDEO.likes += 1;
   await VIDEO.save();
@@ -52,7 +51,7 @@ const togglelikeVideo = asyncHandler(async (req, res) => {
     likedTo: VIDEO.owner,
   });
 
-  return res.status(200).json({
+  return res.status(201).json({
     success: true,
     liked: true,
   });
