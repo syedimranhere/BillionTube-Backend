@@ -293,7 +293,7 @@ export const registerUser = asyncHandler(async (req, res) => {
     });
   }
 
-  if (!usernamevalid(username)) {
+  if (!usernamevalid(username.trim())) {
     return res.status(404).json({
       type: "error",
       message: "Invalid username",
