@@ -339,7 +339,10 @@ export const registerUser = asyncHandler(async (req, res) => {
   const confirm = await user.findById(ourUser._id).select("-password");
 
   if (!confirm) {
-    throw new Apierror(500, "User creation failed ❗");
+    return res.status(500).json({
+      type: "error",
+      message: "Server failed creating user",
+    });
   }
 
   return res.status(201).json({
