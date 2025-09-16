@@ -28,5 +28,6 @@ Everything is written from scratch: no templates, no copy-paste junk—just clea
 ## **Quick Start** 🚀
 1. **Clone the repo**  
 ```bash
-git clone https://github.com/imransyedhere/billiontube-backend.git
+git clone https://github.com/syedimanhere/billiontube-backend.git
 cd billiontube-backend
+
