@@ -307,7 +307,6 @@ export const registerUser = asyncHandler(async (req, res) => {
       message: "Invalid Fullname",
     });
   }
-
   const userExists = await user
     .findOne({
       $or: [{ email }, { username }],
@@ -355,7 +354,7 @@ export const registerUser = asyncHandler(async (req, res) => {
 
 export const DeleteAccount = asyncHandler(async (req, res) => {
   try {
-    // Delete all user-related data
+    // 1) Delete all user-related data
     await user.findByIdAndDelete(req.user);
     await video.deleteMany({ owner: req.user });
     await like.deleteMany({ owner: req.user });
@@ -363,12 +362,8 @@ export const DeleteAccount = asyncHandler(async (req, res) => {
     await comment.deleteMany({ owner: req.user });
     await subscription.deleteMany({ subscriber: req.user });
 
-    console.log("Account deletion completed");
-
-    // Clear the cookie
     res.clearCookie("token", option);
 
-    // IMPORTANT: Send a proper JSON response
     return res.status(200).json({
       success: true,
       message: "Account deleted successfully",

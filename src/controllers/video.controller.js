@@ -154,7 +154,9 @@ const getVideoById = asyncHandler(async (req, res) => {
   await x.save();
 
   // Increment views
+
   file.views = (file.views || 0) + 1;
+
   await file.save();
 
   return res.status(200).json({
